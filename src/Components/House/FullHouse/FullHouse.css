@@ -1,0 +1,34 @@
+.house-container{
+    
+    background-color: initial;
+    margin: 200px auto 30px;
+    max-width: 133rem;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border:gold 2px solid;
+    padding:100px 0px 50px;
+}
+@media (max-width:1072px) {
+    .house-container{
+        flex-direction: column;
+    }
+    .description{
+        margin-top:40px;
+    }
+}
+.logo-house{
+    height:400px;
+    padding-right:100px;
+
+}
+.description{
+    color:white;
+}
+h2{
+    font-size:25px;
+}
+h2 span{
+    color:gold;
+    margin-right:20px;
+}

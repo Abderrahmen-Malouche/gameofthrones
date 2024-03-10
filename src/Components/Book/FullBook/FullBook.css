@@ -1,0 +1,34 @@
+.book-container{
+    
+    background-color: initial;
+    margin: 200px auto 30px;
+    max-width: 133rem;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border:gold 2px solid;
+    padding:100px 0px 50px;
+    border-radius: 9px;
+}
+@media (max-width:1072px) {
+    .book-container{
+        flex-direction: column;
+    }
+    .description{
+        margin-top:40px;
+    }
+}
+.logo-book{
+    height:400px;
+
+}
+.description{
+    color:white;
+}
+h2{
+    font-size:25px;
+}
+h2 span{
+    color:gold;
+    margin-right:20px;
+}

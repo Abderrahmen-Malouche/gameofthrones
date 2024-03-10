@@ -1,0 +1,7 @@
+.full-character{
+    background-color: initial;
+    margin: 0 auto 30px;
+    max-width: 133rem;
+    justify-content: space-between;
+    align-items: center;
+}
