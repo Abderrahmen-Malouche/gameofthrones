@@ -10,56 +10,41 @@ const RelatedElements = (props) => {
     const [characterNames, setCharacterNames] = useState([]);
     const [povNames, setPovNames] = useState([]);
 
-    useEffect(() => {
-        const fetchCharacterNames = async () => {
-            const names = [];
-            for (const characterUrl of props.characters) {
-                try {
-                    const response = await fetch(characterUrl);
-                    const data = await response.json();
-                    let characterName="" 
-                    if (data.name==""){
-                       characterName = "Not mentionned";
-                    }
-                    else{
-                        characterName=data.name;
-                    }
-                    names.push(characterName);
-                } catch (error) {
-                    console.error('Error fetching character data:', error);
-                }
-            }
-            setCharacterNames(names);
-        };
-        fetchCharacterNames();
-    }, [props.characters]);
+useEffect(() => {
+    const fetchData = async () => {
+        const characterNamesArray = [];
+        const povNamesArray = [];
 
-    useEffect(() => {
-        const fetchPovNames = async () => {
-            const povnames = [];
-            
-            for (const povcharacterUrl of props.povCharacters) {
-                try {
-                    const povresponse = await fetch(povcharacterUrl);
-                    const povdata = await povresponse.json();
-                    let povcharacterName="" 
-                    if (povdata.name==""){
-                       povcharacterName = "Not mentionned";
-                    }
-                    else{
-                        povcharacterName=povdata.name;
-                    }
-                    povnames.push(povcharacterName);
-                } catch (error) {
-                    console.error('Error fetching character data:', error);
-                }
+        const fetchCharacterData = async (url) => {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                let characterName = data.name || "Not mentioned";
+                return characterName;
+            } catch (error) {
+                console.error('Error fetching character data:', error);
+                return "Error";
             }
-            
-            setPovNames(povnames);
         };
 
-        fetchPovNames();
-    }, [props.povCharacters]);
+        // Fetch character names
+        await Promise.all(props.characters.map(async characterUrl => {
+            const characterName = await fetchCharacterData(characterUrl);
+            characterNamesArray.push(characterName);
+        }));
+
+        // Fetch POV character names
+        await Promise.all(props.povCharacters.map(async povcharacterUrl => {
+            const povName = await fetchCharacterData(povcharacterUrl);
+            povNamesArray.push(povName);
+        }));
+
+        setCharacterNames(characterNamesArray);
+        setPovNames(povNamesArray);
+    };
+
+    fetchData();
+}, [props.characters, props.povCharacters]);
 
   return (
     
