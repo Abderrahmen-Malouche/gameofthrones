@@ -1,10 +1,38 @@
-import React from 'react'
+import React ,{useState,useEffect}from 'react'
 import "./FullCharacter.css"
 import booklogo from '../../../Assets/book.png'
 import { NavLink } from 'react-router-dom'
 import RelatedElements from '../RelatedElements'
 const FullCharacter = (props) => {
-
+    const [mother, setMother] = useState("");
+    const [father, setFather] = useState("");
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchDataFromUrl = async (url) => {
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    return data.name || "Not mentioned";
+                } catch (error) {
+                    console.error(`Error fetching data from API`, error);
+                    return "Error";
+                }
+            };
+    
+            if (props.character && props.character.mother) {
+                const mother = await fetchDataFromUrl(`https://anapioficeandfire.com/api/characters/${props.character.mother.split("/").pop()}`);
+                setMother(mother);
+            }
+    
+            if (props.character && props.character.father) {
+                const father = await fetchDataFromUrl(`https://anapioficeandfire.com/api/characters/${props.character.father.split("/").pop()}`);
+                setFather(father);
+            }
+        };
+    
+        fetchData();
+    }, [props.character]);
   return (
     <div className='book'>
       <div className="char-container">
@@ -48,6 +76,17 @@ const FullCharacter = (props) => {
             <h2 className="titles"><span>Titles :</span> Not mentioned</h2>
         )}
 
+        {props.character.father ? ( 
+            <h2 className="father"><span>Father :</span> <NavLink style={{ textDecoration: 'underline', color:"white"}} exact to={`/characters/${props.character.father.split('/').pop()}`}>{father}</NavLink></h2>
+        ) : (
+            <h2 className="father"><span>Father :</span> Not mentioned</h2>
+        )}
+
+        {props.character.mother ? (
+            <h2 className="mother"><span>Mother :</span> <NavLink style={{ textDecoration: 'underline', color:"white"}} exact to={`/characters/${props.character.mother.split('/').pop()}`}>{mother}</NavLink></h2>
+        ) : (
+            <h2 className="mother"><span>Mother :</span> Not mentioned</h2>
+        )}
         {props.character.playedBy ? (
             <h2 className="playedBy"><span>Played By :</span> {props.character.playedBy}</h2>
         ) : (
@@ -63,7 +102,7 @@ const FullCharacter = (props) => {
 )}
        </div>
       </div>
-       {(props.character?.books) && (
+       {(props.character?.books || props.character?.allegiances) && (
        <RelatedElements
         books={props.character.books}
         allegiances={props.character.allegiances}

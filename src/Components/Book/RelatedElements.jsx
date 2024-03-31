@@ -7,20 +7,23 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { NavLink } from 'react-router-dom';
 const RelatedElements = (props) => {
-    const [characterNames, setCharacterNames] = useState([]);
+    const [characterNames, setCharacterNames] = useState([]); 
     const [povNames, setPovNames] = useState([]);
+    const [charId,setCharId]=useState([]);
+    const [povId,setPovId]=useState([]);
 
-useEffect(() => {
+useEffect(() => { // We are using useEffect here because we are waiting for the API to load . so that when that happens , no error will be showwn 
     const fetchData = async () => {
         const characterNamesArray = [];
         const povNamesArray = [];
+        const characterIds=[];
+        const PovIds=[];
 
-        const fetchCharacterData = async (url) => {
+        const fetchCharacterData = async (url) => { // in this we are fetching the data depending on the URL it can be book or character or house
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                let characterName = data.name || "Not mentioned";
-                return characterName;
+                return data || "Not mentioned";
             } catch (error) {
                 console.error('Error fetching character data:', error);
                 return "Error";
@@ -28,19 +31,23 @@ useEffect(() => {
         };
 
         // Fetch character names
-        await Promise.all(props.characters.map(async characterUrl => {
+        await Promise.all(props.characters.map(async characterUrl => { // In here we searching for the characters in the book mentionned in the API through their URls
             const characterName = await fetchCharacterData(characterUrl);
-            characterNamesArray.push(characterName);
+            characterNamesArray.push(characterName.name);
+            characterIds.push(parseInt(characterUrl.split('/').pop()));
         }));
 
         // Fetch POV character names
-        await Promise.all(props.povCharacters.map(async povcharacterUrl => {
+        await Promise.all(props.povCharacters.map(async povcharacterUrl => {// In here we searching for the POVcharacters in the book mentionned in the API through their URls
             const povName = await fetchCharacterData(povcharacterUrl);
-            povNamesArray.push(povName);
+            povNamesArray.push(povName.name);
+            PovIds.push(parseInt(povcharacterUrl.split('/').pop()));
         }));
 
         setCharacterNames(characterNamesArray);
         setPovNames(povNamesArray);
+        setCharId(characterIds);
+        setPovId(PovIds);
     };
 
     fetchData();
@@ -52,18 +59,18 @@ useEffect(() => {
         <h2 className='title'>Related Elements:</h2>
         <div className="relatedcharacters">
             <h1>Related Characters : </h1>
-        <Swiper
-        slidesPerView={3}
+        <Swiper // In here we are adding a swiper for a better UI experience and making the navigation easier between character
+        slidesPerView={2}
         spaceBetween={1}
         style={{ width: '800px', }}
         >
             {characterNames.map((name, index) => (
                         <SwiperSlide key={index}>
-                            <NavLink exact to={`/characters/${index}`}>
+                            <NavLink style={{ textDecoration: 'none', color:"white"}} exact to={`/characters/${charId[index]}`}>  
                                 {name}
-                            </NavLink>
+                            </NavLink> 
                         </SwiperSlide>
-                    ))}
+                    ))} 
         </Swiper>
         </div>
         <div className="relatedcharacters">
@@ -75,7 +82,7 @@ useEffect(() => {
         >
             {povNames.map((povname, index) => (
                         <SwiperSlide key={index}>
-                            <NavLink exact to={`/characters/${index}`}>
+                            <NavLink style={{ textDecoration: 'none', color:"white"}} exact to={`/characters/${povId[index]}`}>
                                 {povname}
                             </NavLink>
                         </SwiperSlide>
@@ -84,7 +91,7 @@ useEffect(() => {
         </div>
     </div>
     
-  
+   // Whenever we click n a character or A pov chracter it takes us to the target chracter page with details and everything
   )
 }
 

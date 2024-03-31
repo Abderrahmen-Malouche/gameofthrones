@@ -24,7 +24,7 @@ const Navbar = () => {
             
             
             <div className="navbar-logo">
-                <img src={logo} alt="" />
+             <NavLink style={{ textDecoration: 'none' ,color:"gold"}} exact to="/" activeClassName="active" classname="navlink"><img src={logo} alt="" /></NavLink>
             </div>
             
             <ul className='list'>

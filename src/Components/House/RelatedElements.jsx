@@ -7,91 +7,54 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { NavLink } from 'react-router-dom';
 const RelatedElements = (props) => {
-    const [characterNames, setCharacterNames] = useState([]);
-    const [povNames, setPovNames] = useState([]);
+    const [swornMembers, setSwornMembers] = useState([]);
+    const [memberID ,setMemberID]= useState([]);
 
     useEffect(() => {
-        const fetchCharacterNames = async () => {
-            const names = [];
-            for (const characterUrl of props.characters) {
+        const fetchData = async () => {
+            const members = [];
+            const membersId=[];
+            const fetchMembers = async (url) => {
                 try {
-                    const response = await fetch(characterUrl);
+                    const response = await fetch(url);
                     const data = await response.json();
-                    let characterName="" 
-                    if (data.name==""){
-                       characterName = "Not mentionned";
-                    }
-                    else{
-                        characterName=data.name;
-                    }
-                    names.push(characterName);
+                    return data.name || "Not mentioned";
+                    
                 } catch (error) {
-                    console.error('Error fetching character data:', error);
+                    console.error('Error fetching Members data:', error);
+                    return "Error";
                 }
+            };
+    
+            if (props.members) {
+                await Promise.all(props.members.map(async characterUrl => {
+                    const characterName = await fetchMembers(characterUrl);
+                    members.push(characterName.name);
+                    membersId.push(parseInt(characterUrl.split('/').pop()));
+                }));
             }
-            setCharacterNames(names);
+            setMemberID(memberID);
+            setSwornMembers(members);
         };
-        fetchCharacterNames();
-    }, [props.characters]);
-
-    useEffect(() => {
-        const fetchPovNames = async () => {
-            const povnames = [];
-            
-            for (const povcharacterUrl of props.povCharacters) {
-                try {
-                    const povresponse = await fetch(povcharacterUrl);
-                    const povdata = await povresponse.json();
-                    let povcharacterName="" 
-                    if (povdata.name==""){
-                       povcharacterName = "Not mentionned";
-                    }
-                    else{
-                        povcharacterName=povdata.name;
-                    }
-                    povnames.push(povcharacterName);
-                } catch (error) {
-                    console.error('Error fetching character data:', error);
-                }
-            }
-            
-            setPovNames(povnames);
-        };
-
-        fetchPovNames();
-    }, [props.povCharacters]);
+    
+        fetchData();
+    }, [props.swornMembers]);
 
   return (
     
       <div className='related-container'>
         <h2 className='title'>Related Elements:</h2>
         <div className="relatedcharacters">
-            <h1>Related Characters : </h1>
+            <h1>Sworn Members : </h1>
         <Swiper
-        slidesPerView={3}
+        slidesPerView={2}
         spaceBetween={1}
         style={{ width: '800px', }}
         >
-            {characterNames.map((name, index) => (
+            {swornMembers.map((member, index) => (
                         <SwiperSlide key={index}>
-                            <NavLink exact to={`/characters/${index}`}>
-                                {name}
-                            </NavLink>
-                        </SwiperSlide>
-                    ))}
-        </Swiper>
-        </div>
-        <div className="relatedcharacters">
-            <h1>Related Pov Characters : </h1>
-        <Swiper
-        slidesPerView={3}
-        spaceBetween={1}
-        style={{ width: '800px', }}
-        >
-            {povNames.map((povname, index) => (
-                        <SwiperSlide key={index}>
-                            <NavLink exact to={`/characters/${index}`}>
-                                {povname}
+                            <NavLink style={{ textDecoration: 'none', color:"white"}} exact to={`/characters/${memberID[index]}`}>
+                                {member}
                             </NavLink>
                         </SwiperSlide>
                     ))}

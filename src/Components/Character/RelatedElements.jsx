@@ -9,18 +9,21 @@ import { NavLink } from 'react-router-dom';
 const RelatedElements = (props) => {
     const [alleg, setAlleg] = useState([]);
     const [books, setBooks] = useState([]);
-    
+    const [allegId,setAllegId]=useState([]);
+    const [booksID, setBooksId] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             const allegiancesArray = [];
+            const allegiancesID=[];
+
             const booksArray = [];
-    
-            const fetchDataFromUrl = async (url) => {
+            const booksID=[];
+            const fetchDataFromUrl = async (url) => {// we are fetching  for the API data that in our case is house and book 
                 try {
                     const response = await fetch(url);
                     const data = await response.json();
-                    let name = data.name || "Not mentioned";
-                    return name;
+                    return data || "Not mentioned";
+                    
                 } catch (error) {
                     console.error(`Error fetching data from ${url}:`, error);
                     return "Error";
@@ -30,17 +33,21 @@ const RelatedElements = (props) => {
             // Fetch allegiance names
             await Promise.all(props.allegiances.map(async houseurl => {
                 const allegianceName = await fetchDataFromUrl(houseurl);
-                allegiancesArray.push(allegianceName);
+                allegiancesArray.push(allegianceName.name);
+                allegiancesID.push(parseInt(houseurl.split('/').pop()))
             }));
     
             // Fetch book names
             await Promise.all(props.books.map(async bookurl => {
                 const bookName = await fetchDataFromUrl(bookurl);
-                booksArray.push(bookName);
+                booksArray.push(bookName.name);
+                booksID.push(parseInt(bookurl.split('/').pop()))
             }));
     
             setAlleg(allegiancesArray);
             setBooks(booksArray);
+            setAllegId(allegiancesID);
+            setBooksId(booksID);
         };
     
         fetchData();
@@ -54,13 +61,13 @@ const RelatedElements = (props) => {
         <div className="relatedcharacters">
             <h1>Related Books : </h1>
         <Swiper
-        slidesPerView={3}
+        slidesPerView={2}
         spaceBetween={1}
         style={{ width: '800px', }}
         >
             {books.map((book, index) => (
                         <SwiperSlide key={index}>
-                            <NavLink exact to={`/books/${index}`}>
+                            <NavLink style={{ textDecoration: 'none', color:"white"}}  exact to={`/books/${booksID[index]}`}>
                                 {book}
                             </NavLink>
                         </SwiperSlide>
@@ -76,7 +83,7 @@ const RelatedElements = (props) => {
         >
             {alleg.map((allegiance, index) => (
                         <SwiperSlide key={index}>
-                            <NavLink exact to={`/houses/${index}`}>
+                            <NavLink style={{ textDecoration: 'none', color:"white"}} exact to={`/houses/${allegId[index]}`}>
                                 {allegiance}
                             </NavLink>
                         </SwiperSlide>

@@ -17,6 +17,13 @@
         padding:100px 0px 50px;
         border-radius: 9px;
 }
+@media (max-width:1072px) {
+    .relatedcharacters{
+        flex-direction: column;
+        gap:20px;
+    }
+   
+}
 .relatedcharacters h1{
     color:gold;
     padding-left:20px;

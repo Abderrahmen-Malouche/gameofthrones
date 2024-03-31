@@ -1,16 +1,14 @@
 .bookpreview{
-    background-color:rgb(139, 121, 15);
-    padding:20px;
-    width:200px;
-    height:250px;
-    border-radius: 15%;
-    cursor:pointer;
-    box-shadow: 17px 10px 20px 8px rgba(0, 0, 0, 0.13);
+  width:200px;
+  height:380px;
+  border-radius: 10%;
+  cursor:pointer;
+  box-shadow: 17px 10px 20px 8px rgba(0, 0, 0, 0.13);
 }
 .bookpreview .logo img{
   transition:linear 1s;
-  width:110px;
-  margin:0 10px;
+  width:200px;
+  margin:50px 4px 0px;
 }
 .bookpreview h2{
     display:flex;
@@ -18,6 +16,8 @@
     justify-content: center;
     font-size:25px;
     padding: 0 auto;
+    color:black;
+    text-align: center;
 }
 
 .bookpreview:hover .logo img{
