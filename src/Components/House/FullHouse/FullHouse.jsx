@@ -9,9 +9,9 @@ const FullHouse = (props) => {
   const [heir, setHeir] = useState("");
   const [overloard, setOverloard] = useState("");
   
-  useEffect(() => {
-      const fetchData = async () => {
-          const fetchDataFromUrl = async (url) => {
+  useEffect(() => { 
+      const fetchData = async () => {    
+          const fetchDataFromUrl = async (url) => { // function to fetch data from a given api
               try {
                   const response = await fetch(url);
                   const data = await response.json();
@@ -23,17 +23,17 @@ const FullHouse = (props) => {
           };
   
           if (props.house && props.house.currentLord) {
-              const lordName = await fetchDataFromUrl(`https://anapioficeandfire.com/api/characters/${props.house.currentLord.split("/").pop()}`);
+              const lordName = await fetchDataFromUrl(`https://anapioficeandfire.com/api/characters/${props.house.currentLord.split("/").pop()}`);// fetching the current lord of a house
               setLord(lordName);
           }
   
           if (props.house && props.house.heir) {
-              const heirName = await fetchDataFromUrl(`https://anapioficeandfire.com/api/characters/${props.house.heir.split("/").pop()}`);
+              const heirName = await fetchDataFromUrl(`https://anapioficeandfire.com/api/characters/${props.house.heir.split("/").pop()}`); //fetching the current heir of a house
               setHeir(heirName);
           }
   
           if (props.house && props.house.overloard) {
-              const overloardName = await fetchDataFromUrl(`https://anapioficeandfire.com/api/characters/${props.house.overloard.split("/").pop()}`);
+              const overloardName = await fetchDataFromUrl(`https://anapioficeandfire.com/api/characters/${props.house.overloard.split("/").pop()}`); // fetching the house overloard
               setOverloard(overloardName);
           }
       };
@@ -48,7 +48,7 @@ const FullHouse = (props) => {
         {props.house && (
         <>
         {props.house.name ? (
-            <h2 className="name"><span>Name :</span> {props.house.name}</h2>
+            <h2 className="name"><span>Name :</span> {props.house.name}</h2> // in here and in upcoming elements if it is empty in the API we will write not mentioned 
         ) : (
             <h2 className="name"><span>Name :</span> Not mentioned</h2>
         )}
@@ -82,7 +82,7 @@ const FullHouse = (props) => {
             <h2 className="seats"><span>Seats:</span> Not mentioned</h2>
         )}
         {props.house.currentLord ? (
-              <h2 className="currentLord"><span>Current Loard :</span> <NavLink style={{ textDecoration: 'underline', color:"white"}} exact to={`/characters/${props.house.currentLord.split('/').pop()}`}>{lord}</NavLink></h2>
+              <h2 className="currentLord"><span>Current Loard :</span> <NavLink style={{ textDecoration: 'underline', color:"white"}} exact to={`/characters/${props.house.currentLord.split('/').pop()}`}>{lord}</NavLink></h2> // if there is a lord then if we click on it will take us to the page of that character 
           ) : (
               <h2 className="currentLord"><span>Current loard :</span> Not mentioned</h2>
           )}
